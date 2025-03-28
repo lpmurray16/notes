@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -16,8 +16,7 @@ interface Note {
 }
 
 export default function NotePage({ params }: { params: { id: string } }) {
-	// Unwrap params using React.use()
-	const unwrappedParams = use(params);
+	// Access params directly
 	const { status } = useSession();
 	const router = useRouter();
 	const [note, setNote] = useState<Note | null>(null);
@@ -40,7 +39,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
 			try {
 				setIsLoading(true);
 				setError(null);
-				const response = await fetch(`/api/notes/${unwrappedParams.id}`);
+				const response = await fetch(`/api/notes/${params.id}`);
 
 				if (!response.ok) {
 					if (response.status === 404) {
@@ -62,7 +61,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
 		};
 
 		fetchNote();
-	}, [unwrappedParams.id]);
+	}, [params.id]);
 
 	const handleSave = async () => {
 		if (!note) return;
@@ -118,6 +117,32 @@ export default function NotePage({ params }: { params: { id: string } }) {
 			alert('Failed to delete note. Please try again.');
 		}
 	};
+
+	if (isLoading) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<div className="text-center">
+					<p className="text-foreground/60 mb-4">Loading note...</p>
+				</div>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<div className="text-center">
+					<p className="text-foreground/60 mb-4">{error}</p>
+					<Link
+						href="/notes"
+						className="inline-flex items-center gap-2 rounded-full bg-foreground text-background px-4 py-2 hover:bg-foreground/90 transition-colors"
+					>
+						Back to Notes
+					</Link>
+				</div>
+			</div>
+		);
+	}
 
 	if (!note) {
 		return (

@@ -57,7 +57,9 @@ export const authOptions: AuthOptions = {
 		async jwt({ token, user }) {
 			// Persist the user ID to the token right after signin
 			if (user) {
-				token.sub = user.id || user._id?.toString();
+				// Use user.id if available (AdapterUser), otherwise try to use MongoDB's _id if it exists
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				token.sub = user.id || (user as any)._id?.toString();
 			}
 			return token;
 		},
