@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
 // GET a single note by ID
-export async function GET(request: NextRequest, context: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
 	try {
 		const session = await getServerSession(authOptions);
 
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest, context: { params: { id: string 
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const { id } = context.params;
+		const { id } = params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest, context: { params: { id: string 
 }
 
 // PUT update a note by ID
-export async function PUT(request: NextRequest, context: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
 	try {
 		const session = await getServerSession(authOptions);
 
@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest, context: { params: { id: string 
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const { id } = context.params;
+		const { id } = params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });
@@ -97,7 +97,7 @@ export async function PUT(request: NextRequest, context: { params: { id: string 
 }
 
 // DELETE a note by ID
-export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
 	try {
 		const session = await getServerSession(authOptions);
 
@@ -105,7 +105,7 @@ export async function DELETE(request: NextRequest, context: { params: { id: stri
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const { id } = context.params;
+		const { id } = params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });
