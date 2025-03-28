@@ -13,7 +13,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const { id } = await params;
+		const { id } = params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });
@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const { id } = await params;
+		const { id } = params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });
@@ -105,7 +105,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const { id } = await params;
+		const { id } = params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });
