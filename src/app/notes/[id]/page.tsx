@@ -18,7 +18,7 @@ interface Note {
 export default function NotePage({ params }: { params: { id: string } }) {
 	// Unwrap params using React.use()
 	const unwrappedParams = use(params);
-	const { data: session, status } = useSession();
+	const { status } = useSession();
 	const router = useRouter();
 	const [note, setNote] = useState<Note | null>(null);
 	const [title, setTitle] = useState('');

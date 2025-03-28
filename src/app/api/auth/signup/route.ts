@@ -48,11 +48,11 @@ export async function POST(request: NextRequest) {
 				email: user.email,
 			},
 		});
-	} catch (error: any) {
+	} catch (error: Error | unknown) {
 		console.error('Registration error:', error);
 
 		// Handle duplicate key error (if MongoDB unique index catches it)
-		if (error.code === 11000) {
+		if ((error as any).code === 11000) {
 			return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
 		}
 

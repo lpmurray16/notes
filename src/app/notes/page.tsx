@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 
 interface Note {
@@ -16,7 +15,7 @@ interface Note {
 }
 
 export default function NotesPage() {
-	const { data: session, status } = useSession();
+	const { status } = useSession();
 	const router = useRouter();
 	const [notes, setNotes] = useState<Note[]>([]);
 	const [searchTerm, setSearchTerm] = useState('');

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 
 export default function NewNotePage() {
-	const { data: session, status } = useSession();
+	const { status } = useSession();
 	const router = useRouter();
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');

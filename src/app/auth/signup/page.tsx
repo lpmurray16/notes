@@ -48,9 +48,9 @@ export default function SignUp() {
 
 			// Redirect to sign-in page on successful registration
 			router.push('/auth/signin?registered=true');
-		} catch (err: any) {
+		} catch (err: Error | unknown) {
 			console.error('Sign up error:', err);
-			setError(err.message || 'An error occurred during registration');
+			setError(err instanceof Error ? err.message : 'An error occurred during registration');
 			setIsLoading(false);
 		}
 	};
