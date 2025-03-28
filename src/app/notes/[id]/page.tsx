@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 
@@ -15,8 +15,10 @@ interface Note {
 	userId: string;
 }
 
-export default function NotePage({ params }: { params: { id: string } }) {
-	// Access params directly
+export default function NotePage() {
+	// Use the useParams hook to get the id parameter
+	const params = useParams();
+	const id = params.id as string;
 	const { status } = useSession();
 	const router = useRouter();
 	const [note, setNote] = useState<Note | null>(null);
@@ -39,7 +41,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
 			try {
 				setIsLoading(true);
 				setError(null);
-				const response = await fetch(`/api/notes/${params.id}`);
+				const response = await fetch(`/api/notes/${id}`);
 
 				if (!response.ok) {
 					if (response.status === 404) {
@@ -61,7 +63,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
 		};
 
 		fetchNote();
-	}, [params.id]);
+	}, [id]);
 
 	const handleSave = async () => {
 		if (!note) return;
@@ -69,7 +71,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
 		setIsSaving(true);
 
 		try {
-			const response = await fetch(`/api/notes/${params.id}`, {
+			const response = await fetch(`/api/notes/${id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -103,7 +105,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
 		if (!confirm('Are you sure you want to delete this note?')) return;
 
 		try {
-			const response = await fetch(`/api/notes/${params.id}`, {
+			const response = await fetch(`/api/notes/${id}`, {
 				method: 'DELETE',
 			});
 
