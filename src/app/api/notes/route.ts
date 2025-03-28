@@ -3,11 +3,13 @@ import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 
 import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]/route';
 
 // GET all notes for the authenticated user
 export async function GET() {
 	try {
-		const session = await getServerSession();
+		const session = await getServerSession(authOptions);
+		console.log('Session from get all notes', session);
 
 		if (!session?.user) {
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -16,7 +18,7 @@ export async function GET() {
 		const client = await clientPromise;
 		const db = client.db();
 
-		const notes = await db.collection('notes').find({ userId: session.user.id }).sort({ updatedAt: -1 }).toArray();
+		const notes = await db.collection('notes').find({ userId: session?.user?.id }).sort({ updatedAt: -1 }).toArray();
 
 		return NextResponse.json(notes);
 	} catch (error) {
@@ -28,7 +30,8 @@ export async function GET() {
 // POST create a new note
 export async function POST(request: NextRequest) {
 	try {
-		const session = await getServerSession();
+		const session = await getServerSession(authOptions);
+		console.log('Session from creating new note:', session);
 
 		if (!session?.user) {
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

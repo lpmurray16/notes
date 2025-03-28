@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { use } from 'react';
 import Navbar from '@/components/Navbar';
 
 interface Note {
@@ -13,10 +12,11 @@ interface Note {
 	content: string;
 	createdAt: string;
 	updatedAt: string;
+	userId: string;
 }
 
 export default function NotePage({ params }: { params: { id: string } }) {
-	// Unwrap the params Promise using React.use()
+	// Unwrap params using React.use()
 	const unwrappedParams = use(params);
 	const { data: session, status } = useSession();
 	const router = useRouter();
@@ -70,7 +70,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
 		setIsSaving(true);
 
 		try {
-			const response = await fetch(`/api/notes/${unwrappedParams.id}`, {
+			const response = await fetch(`/api/notes/${params.id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
 		if (!confirm('Are you sure you want to delete this note?')) return;
 
 		try {
-			const response = await fetch(`/api/notes/${unwrappedParams.id}`, {
+			const response = await fetch(`/api/notes/${params.id}`, {
 				method: 'DELETE',
 			});
 

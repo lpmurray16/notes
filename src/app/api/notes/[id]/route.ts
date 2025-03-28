@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 import { getServerSession } from 'next-auth';
+import { authOptions } from '../../auth/[...nextauth]/route';
 
 // GET a single note by ID
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
 	try {
-		const session = await getServerSession();
+		const session = await getServerSession(authOptions);
 
 		if (!session?.user) {
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const id = params.id;
+		const { id } = await params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });
@@ -46,13 +47,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 // PUT update a note by ID
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
 	try {
-		const session = await getServerSession();
+		const session = await getServerSession(authOptions);
 
 		if (!session?.user) {
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const id = params.id;
+		const { id } = await params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });
@@ -98,13 +99,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 // DELETE a note by ID
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
 	try {
-		const session = await getServerSession();
+		const session = await getServerSession(authOptions);
 
 		if (!session?.user) {
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		const id = params.id;
+		const { id } = await params;
 
 		if (!ObjectId.isValid(id)) {
 			return NextResponse.json({ error: 'Invalid note ID' }, { status: 400 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -11,11 +11,13 @@ export default function SignIn() {
 	const [password, setPassword] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
+	const [successMessage, setSuccessMessage] = useState('');
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
 		setError('');
+		setSuccessMessage('');
 
 		try {
 			const result = await signIn('credentials', {
@@ -39,6 +41,14 @@ export default function SignIn() {
 		}
 	};
 
+	// Check for registered=true in URL when component mounts
+	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		if (searchParams.get('registered') === 'true') {
+			setSuccessMessage('Account created successfully! Please sign in.');
+		}
+	}, []);
+
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-background p-4">
 			<div className="w-full max-w-md space-y-8 p-8 border border-foreground/10 rounded-lg">
@@ -48,6 +58,7 @@ export default function SignIn() {
 				</div>
 
 				{error && <div className="p-3 bg-red-500/10 text-red-500 rounded-md text-sm">{error}</div>}
+				{successMessage && <div className="p-3 bg-green-500/10 text-green-500 rounded-md text-sm">{successMessage}</div>}
 
 				<form onSubmit={handleSubmit} className="mt-8 space-y-6">
 					<div>
@@ -129,6 +140,15 @@ export default function SignIn() {
 							Sign in with Google
 						</button>
 					</div>
+				</div>
+
+				<div className="mt-6 text-center text-sm">
+					<p>
+						Don't have an account?{' '}
+						<Link href="/auth/signup" className="text-foreground hover:underline">
+							Sign up
+						</Link>
+					</p>
 				</div>
 
 				<div className="mt-6 text-center text-sm">
